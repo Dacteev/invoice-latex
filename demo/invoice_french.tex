@@ -1,0 +1,36 @@
+%% Copyright 2014 Dacteev
+
+\documentclass[french]{invoice}
+
+% Use blindtext package for generate payment terms text,
+% remove in real invoice.
+\usepackage[pangram]{blindtext}
+
+\companyname{Dacteev}
+\companyaddress{19 Boulevard de la Gare}{31500}{Toulouse}{}{France}
+\companyphone{+33 6 84 15 57 52}
+\companyfax{+33 5 00 00 00 00}
+\companyemail{contact@dacteev.com}
+\companywebsite{www.dacteev.com}
+\companylogo{images/logo}
+
+\currency{EUR}{\euro{}}
+\vat{20}
+
+\paymentterms{\Blindtext[1][3]}
+
+\invoicenumber{1234}
+
+\clientref{15467}
+\clientname{Acme}
+\clientaddress{10 Rue Campagne Première}{75014}{Paris}{}{France}
+\clientphone{+33 1 00 00 00 00}
+\clientemail{jean.dupont@acme.com}
+
+\invoiceitem{Impressions jusqua 999 999 999}{44217079}{0.0400}
+\invoiceitem{Impressions jusqua 999 999}{217079}{0.0800}
+\invoiceitem{Impressions jusqua 99 999}{17079}{0.0900}
+
+\begin{document}
+    \makeinvoice
+\end{document}
