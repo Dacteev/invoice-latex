@@ -1,5 +1,6 @@
 *.aux
 *.log
 *.pdf
+!demo/images/*.pdf
 .DS_Store
 build
