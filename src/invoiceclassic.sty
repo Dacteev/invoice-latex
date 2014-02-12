@@ -1,0 +1,230 @@
+%% Copyright 2014 Dacteev
+
+%-------------------------------------------------------------------------------
+%                identification
+%-------------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{invoiceclassic}[2014/02/11 v0.1.0 invoice classic style]
+
+%-------------------------------------------------------------------------------
+%                required packages
+%-------------------------------------------------------------------------------
+\RequirePackage[top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm, includefoot]{geometry}
+\RequirePackage{fmtcount}
+\RequirePackage{ifthen}
+\RequirePackage{fp}
+\RequirePackage{xcolor}
+\RequirePackage{colortbl}
+\RequirePackage[scaled]{helvet}
+
+%-------------------------------------------------------------------------------
+%                overall design commands definitions
+%-------------------------------------------------------------------------------
+
+\definecolor{primary}{RGB}{0,134,143}
+\definecolor{border}{RGB}{119,119,119}
+\definecolor{text}{RGB}{119,119,119}
+\definecolor{title}{RGB}{0,0,0}
+
+\fancypagestyle{plain}{
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[c]{
+        \parbox[b]{\textwidth}{
+            \centering
+            \scriptsize
+            \@companyname~\textendash~\@companystreet, \@companyzipcode~\@companycity, \@companycountry\\
+            \@companyemail~\textendash~Phone: \@companyphone
+        }
+    }
+}
+
+\setlength\parindent{0pt}
+\pagestyle{plain}
+\pagenumbering{arabic}
+\urlstyle{tt}
+
+%% Only if the base font of the document is to be sans serif
+\renewcommand*\familydefault{\sfdefault}
+
+% usage: \showinvoicenumber
+\renewcommand*{\showinvoicenumber}{%
+	\padzeroes[7]{\decimal{invoicenumber}}%
+}
+
+% Make invoice logo
+%
+% usage: \makeinvoicelogo
+\renewcommand*{\makeinvoicelogo}{%
+    \includegraphics[width=150pt]{\@companylogo}%
+}
+
+% Make invoice header
+%
+% usage: \makeinvoiceheader
+\renewcommand*{\makeinvoiceheader}{%
+
+    \makeinvoicelogo
+    \\[+1em]
+
+    {\color{border!50}\rule{\textwidth}{.35ex}}
+    \\[+.40em]
+    \begin{minipage}{0.225\textwidth}
+        \Huge{\textcolor{primary}{\translate{INVOICE}}}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}{0.225\textwidth}
+        {\footnotesize
+            \textbf{\translate{Prepared for:}}\\
+            \textcolor{text}{\@clientname}
+        }
+    \end{minipage}
+    \hfill%
+    \begin{minipage}{0.225\textwidth}
+        {\footnotesize\color{text}
+            \@clientstreet,\\
+            \@clientzipcode~\@clientcity,~\@clientcountry
+        }
+    \end{minipage}
+    \hfill%
+    \begin{minipage}{0.225\textwidth}
+        {\footnotesize\color{text}
+            \textbf{E:} \@clientemail\\
+            \textbf{T:} \@clientphone
+        }
+    \end{minipage}
+    \\
+    {\color{border!50}\rule{\textwidth}{.25ex}}
+    \\[+1.60em]
+
+    \def\minipagewidth{0.3\textwidth}
+
+    % seconde line
+    \begin{minipage}{\minipagewidth}%
+        {\footnotesize\bf\itshape\color{title}\translate{Invoice}} {\color{title}\#}\\[-.8em]
+        {\color{border!50}\rule{\textwidth}{.25ex}}\\
+        \textcolor{text}{\#\showinvoicenumber}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{\minipagewidth}%
+        {\footnotesize\bf\itshape\color{title}\translate{Date}}\\[-.8em]
+        {\color{border!50}\rule{\textwidth}{.25ex}}\\
+        \textcolor{text}{2014-01-01}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{\minipagewidth}%
+        {\footnotesize\bf\itshape\color{title}\translate{Payment Due}}\\[-.8em]
+        {\color{border!50}\rule{\textwidth}{.25ex}}\\
+        \textcolor{text}{2014-01-08}
+    \end{minipage}
+    \\
+    \\[+4.5em]
+}
+
+
+% Make invoice table
+%
+% usage: \makeinvoicelist
+\renewcommand*{\makeinvoicelist}{%
+    \FPeval{\vatvalue}{\@total * \@vat/100}
+    \FPeval{\total}{\@total + \vatvalue}
+    \arrayrulecolor{border}
+    \setlength{\arrayrulewidth}{0.5pt}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrr}
+    {\footnotesize\bf\itshape\color{title}\translate{Description}} & {\footnotesize\bf\itshape\color{title}\translate{Volume}} & {\footnotesize\bf\itshape\color{title}\translate{CPM}} & {\footnotesize\bf\itshape\color{title}\translate{Subtotal}} \\ 
+    \hline
+
+    \@invoiceitems
+
+    \end{tabular*}
+    \\[+1.40em]
+
+    \hfill\begin{minipage}{0.17\textwidth}%
+        \raggedleft
+        {\footnotesize\bf\itshape\color{title}\translate{TOTAL}}\\[-.8em]
+        {\color{border!50}\rule{\textwidth}{.25ex}}\\
+        {\small\color{text}\showcurrency{\@total}}
+    \end{minipage}
+    \\[+1.40em]
+
+    \hfill\begin{minipage}{0.17\textwidth}%
+        \raggedleft
+        {\footnotesize\bf\itshape\color{title}\translate{Taxes} (\@vat\%)}\\[-.8em]
+        {\color{border!50}\rule{\textwidth}{.25ex}}\\
+        {\small\color{text}\showcurrency{\vatvalue}}
+    \end{minipage}
+    \\[+4.50em]
+
+    \begin{minipage}{\textwidth}%
+        {\color{title}\bf\translate{TERMS AND CONDITION}\hfill\translate{AMOUNT DUE}}\\[-.8em]
+        {\color{border!50}\rule{\textwidth}{.25ex}}\\[-0.9em]
+
+        \begin{minipage}{0.45\textwidth}%
+            {\color{text}\footnotesize\itshape\@paymentterms}
+        \end{minipage}
+        \hfill\begin{minipage}{0.45\textwidth}%
+            \raggedleft
+            {\Huge\color{primary}\showcurrency{\total}}
+        \end{minipage}
+
+    \end{minipage}
+}
+
+% Add invoice item
+%
+% usage: \invoiceitem{<label>}{<volume>}{<cpm>}
+\renewcommand*{\invoiceitem}[3]{%
+    %\def\subtotal{0}
+    \FPeval{\subtotal}{(#2/1000) * #3}
+    \FPround{\subtotal}{\subtotal}{2}
+    \FPadd{\@total}{\@total}{\subtotal}
+    %\show\subtotal
+
+    \g@addto@macro\@invoiceitems{%
+        {\small\color{text}#1} & {\small\color{text}\formatnumber[0]{#2}} & {\small\color{text}\showcurrency[4]{#3}} & {\small\color{text}\showcurrency{\subtotal}} \\ 
+        \hline
+    }
+}
+
+
+% Make invoice footer
+%
+% usage: \makeinvoicefooter
+\renewcommand*{\makeinvoicefooter}{%
+    \vfill%
+    {\color{border!50}\rule{\textwidth}{.35ex}}
+    \\[+.40em]
+    \begin{minipage}{0.165\textwidth}
+        {\footnotesize\color{text}
+            \textbf{\@companyname}\\
+            \textbf{T:} \@companyphone
+        }
+    \end{minipage}
+    \hfill%
+    \begin{minipage}{0.200\textwidth}
+        {\footnotesize\color{text}
+            \@companystreet,\\
+            \@companyzipcode~\@companycity, \@companycountry
+        }
+    \end{minipage}
+    \hfill%
+    \begin{minipage}{0.225\textwidth}
+        {\footnotesize\color{text}
+            \textbf{E:} \@companyemail\\
+            \textbf{W:} \@companywebsite
+        }
+    \end{minipage}
+    \hfill%
+    \begin{minipage}{0.310\textwidth}
+        \raggedleft
+        {\Huge\color{primary}\translate{THANK YOU!}}%
+    \end{minipage}
+    \\
+    {\color{border!50}\rule{\textwidth}{.25ex}}
+    \\[+.40em]
+}
+
+
+\endinput
