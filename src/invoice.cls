@@ -85,6 +85,14 @@
     \def\@vat{#1}%
 }
 
+% Toggle whether the currency symbol should appear after the amount
+%
+% usage: \currencysymbolpostfix
+\newtoggle{@postfixcurrencysymbol}
+\newcommand*{\currencysymbolpostfix}{%
+  \toggletrue{@postfixcurrencysymbol}%
+}
+
 % Define currency
 %
 % usage: \currency{<currency_code>}{<currency_symbol>}
@@ -92,12 +100,12 @@
     \def\@currencycode{#1}
     \def\@currencysymbol{#2}
 
-    \ifthenelse{\equal{#2}{\$}}{
-        \def\@currencybeforesymbol{#2 }
-        \def\@currencyaftersymbol{}
-    }{
+    \iftoggle{@postfixcurrencysymbol}{
         \def\@currencybeforesymbol{}
         \def\@currencyaftersymbol{ #2}
+    }{
+        \def\@currencybeforesymbol{#2 }
+        \def\@currencyaftersymbol{}
     }
 }
 
