@@ -4,7 +4,7 @@
 %                identification
 %-------------------------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{invoiceclassic}[2014/02/11 v0.1.0 invoice classic style]
+\ProvidesPackage{invoiceclassic}[2021/08/28 v0.2.0 invoice classic style]
 
 %-------------------------------------------------------------------------------
 %                required packages
@@ -26,6 +26,13 @@
 \definecolor{text}{RGB}{119,119,119}
 \definecolor{title}{RGB}{0,0,0}
 
+% SYMBOLS
+\renewcommand*{\mobilesymbol}{\marvosymbol{72}~}
+\renewcommand*{\phonesymbol}{\marvosymbol{84}~}
+\renewcommand*{\faxsymbol}{\marvosymbol{117}~}
+\renewcommand*{\emailsymbol}{\marvosymbol{66}~}
+\renewcommand*{\homepagesymbol}{{\Large\marvosymbol{205}}~}
+
 \fancypagestyle{plain}{
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0pt}
@@ -35,7 +42,12 @@
             \centering
             \scriptsize
             \@companyname~\textendash~\@companystreet, \@companyzipcode~\@companycity, \@companycountry\\
-            \@companyemail~\textendash~Phone: \@companyphone
+            \@companyemail~\textendash~Phone: \@companyphone\\
+            \ifdefempty{\@companyname}{}{\translate{Account Holder}:} \textbf{\@companyname}%
+            \ifdefempty{\@companybank}{}{~\textendash~Bank:} \textbf{\@companybank}%
+            \ifdefempty{\@companyiban}{}{~\textendash~IBAN:}\textbf{\@companyiban}%
+            \ifdefempty{\@companybic}{}{~\textendash~BIC/SWIFT:}\textbf{\@companybic}\\
+             \ifdefempty{\@companytaxnumber}{}{\textbf{Tax-ID.: \@companytaxnumber}}
         }
     }
 }
@@ -70,13 +82,13 @@
 
     {\color{border!50}\rule{\textwidth}{.35ex}}
     \\[+.40em]
-    \begin{minipage}{0.225\textwidth}
+    \begin{minipage}{0.245\textwidth}
         \Huge{\textcolor{primary}{\translate{INVOICE}}}
     \end{minipage}
     \hfill%
     \begin{minipage}{0.225\textwidth}
         {\footnotesize
-            \textbf{\translate{Prepared for:}}\\
+            \textbf{\translate{Prepared for}:}\\
             \textcolor{text}{\@clientname}
         }
     \end{minipage}
@@ -90,8 +102,8 @@
     \hfill%
     \begin{minipage}{0.225\textwidth}
         {\footnotesize\color{text}
-            \textbf{E:} \@clientemail\\
-            \textbf{T:} \@clientphone
+            \ifdefempty{\@clientemail}{}{\emailsymbol} \@clientemail\\
+            \ifdefempty{\@clientphone}{}{\mobilesymbol} \@clientphone
         }
     \end{minipage}
     \\
@@ -175,7 +187,7 @@
 % Add invoice item
 %
 % usage: \invoiceitem{<label>}{<volume>}{<cpm>}
-\renewcommand*{\invoiceitem}[3]{%
+\renewcommand*{\invoiceitem}[4]{%
     %\def\subtotal{0}
     \FPeval{\subtotal}{(#2/1000) * #3}
     \FPround{\subtotal}{\subtotal}{2}
@@ -183,7 +195,8 @@
     %\show\subtotal
 
     \g@addto@macro\@invoiceitems{%
-        {\small\color{text}#1} & {\small\color{text}\formatnumber[0]{#2}} & {\small\color{text}\showcurrency[4]{#3}} & {\small\color{text}\thesubtotal{#2}{#3}} \\
+        {\isargempty{#4}{\vspace{-0.2cm}}\small\color{text}#1} & {\small\color{text}\formatnumber[0]{#2}} & {\small\color{text}\showcurrency[4]{#3}} & {\small\color{text}\thesubtotal{#2}{#3}} \\
+        \isargempty{#4}{{\scriptsize\textit{\color{text}#4}} \\}%
         \hline
     }
 }
@@ -199,7 +212,7 @@
     \begin{minipage}{0.165\textwidth}
         {\footnotesize\color{text}
             \textbf{\@companyname}\\
-            \textbf{T:} \@companyphone
+           \ifdefempty{\@companyphone}{}{\mobilesymbol} \@companyphone
         }
     \end{minipage}
     \hfill%
@@ -212,14 +225,14 @@
     \hfill%
     \begin{minipage}{0.225\textwidth}
         {\footnotesize\color{text}
-            \textbf{E:} \@companyemail\\
-            \textbf{W:} \@companywebsite
+            \ifdefempty{\@companymail}{}{\emailsymbol} \@companyemail\\
+        \ifdefempty{\@companywebsite}{}{\homepagesymbol} \@companywebsite
         }
     \end{minipage}
     \hfill%
     \begin{minipage}{0.310\textwidth}
         \raggedleft
-        {\Huge\color{primary}\translate{THANK YOU!}}%
+        {\Huge\color{primary}\translate{THANK YOU}!}%
     \end{minipage}
     \\
     {\color{border!50}\rule{\textwidth}{.25ex}}

@@ -18,6 +18,8 @@
 *.synctex.gz(busy)
 *.pdfsync
 
+*.pdf
+
 !demo/images/*.pdf
 .DS_Store
 build

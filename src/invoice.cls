@@ -24,7 +24,7 @@
 \RequirePackage{translator}
 \RequirePackage{etoolbox}
 \RequirePackage{bookmark}
-\RequirePackage{eurosym}
+\RequirePackage{marvosym}
 
 % do not show thumbnails or bookmarks on opening (on supporting browsers); set \pdfpagemode to "UseOutlines" to show bookmarks
 \newcommand*\pdfpagemode{UseNone}
@@ -51,9 +51,35 @@
 
 
 %-------------------------------------------------------------------------------
+%                some overall usefull commands
+%-------------------------------------------------------------------------------
+
+\newcommand*{\isargempty}[2]{
+	\ifx&#1&%
+	% #1 is empty
+	\else
+	% #1 is nonempty
+	#2%
+	\fi
+}
+
+
+%-------------------------------------------------------------------------------
 %                overall design commands definitions
 %-------------------------------------------------------------------------------
 
+
+
+% SYMBOLS
+\newcommand*{\marvosymbol}[1]{}
+\renewcommand*{\marvosymbol}[1]{{\fontfamily{mvs}\fontencoding{U}\fontseries{m}\fontshape{n}\selectfont\char#1}}
+
+\newcommand*{\addresssymbol}{}
+\newcommand*{\mobilesymbol}{}
+\newcommand*{\phonesymbol}{}
+\newcommand*{\faxsymbol}{}
+\newcommand*{\emailsymbol}{}
+\newcommand*{\homepagesymbol}{}
 
 % Invoice number
 \newcounter{invoicenumber}
@@ -160,6 +186,34 @@
 % usage: \companylogo{<logo_name>}
 \newcommand*{\companylogo}[1]{%
     \def\@companylogo{#1}%
+}
+
+% Define company taxnumber
+%
+% usage: \companytaxnumber{<name>}
+\newcommand*{\companytaxnumber}[1]{%
+	\def\@companytaxnumber{#1}%
+}
+
+% Define company iban
+%
+% usage: \companyiban{<name>}
+\newcommand*{\companyiban}[1]{%
+	\def\@companyiban{#1}%
+}
+
+% Define company bic
+%
+% usage: \companybic{<name>}
+\newcommand*{\companybic}[1]{%
+	\def\@companybic{#1}%
+}
+
+% Define company bank
+%
+% usage: \companybank{<name>}
+\newcommand*{\companybank}[1]{%
+	\def\@companybank{#1}%
 }
 
 % Define client ref

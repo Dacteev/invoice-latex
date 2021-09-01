@@ -6,6 +6,8 @@
 % remove in real invoice.
 \usepackage[pangram]{blindtext}
 
+\usepackage{dictionaries/invoice-dictionary-frensh}
+
 \companyname{Dacteev}
 \companyaddress{19 Boulevard de la Gare}{31500}{Toulouse}{}{France}
 \companyphone{+33 6 84 15 57 52}
@@ -13,6 +15,10 @@
 \companyemail{contact@dacteev.com}
 \companywebsite{www.dacteev.com}
 \companylogo{images/logo}
+\companyiban{XXxxxxxxxxxxxxxxxxxxxxx}
+\companybic{XXXXXXXXxxxxx}
+\companybank{Bank}
+\companytaxnumber{xx-xxxxxxx}
 
 \currency{USD}{\$}
 \vat{8.75}
@@ -27,9 +33,9 @@
 \clientphone{+1 415-522-1438}
 \clientemail{john.smith@acme.com}
 
-\invoiceitem{Impressions jusqua 999 999 999}{44217079}{0.0400}
-\invoiceitem{Impressions jusqua 999 999}{217079}{0.0800}
-\invoiceitem{Impressions jusqua 99 999}{17079}{0.0900}
+\invoiceitem{Impressions jusqua 999 999 999}{44217079}{0.0400}{}
+\invoiceitem{Impressions jusqua 999 999}{217079}{0.0800}{}
+\invoiceitem{Impressions jusqua 99 999}{17079}{0.0900}{Some detailed description.}
 
 \begin{document}
     \makeinvoice
