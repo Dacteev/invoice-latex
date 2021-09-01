@@ -133,7 +133,7 @@
     \setlength{\arrayrulewidth}{0.5pt}
     \renewcommand{\arraystretch}{1.5}
     \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrr}
-    {\footnotesize\bf\itshape\color{title}\translate{Description}} & {\footnotesize\bf\itshape\color{title}\translate{Volume}} & {\footnotesize\bf\itshape\color{title}\translate{CPM}} & {\footnotesize\bf\itshape\color{title}\translate{Subtotal}} \\ 
+    {\footnotesize\bf\itshape\color{title}\translate{Description}} & {\footnotesize\bf\itshape\color{title}\translate{Volume}} & {\footnotesize\bf\itshape\color{title}\translate{CPM}} & {\footnotesize\bf\itshape\color{title}\translate{Subtotal}} \\
     \hline
 
     \@invoiceitems
@@ -183,7 +183,7 @@
     %\show\subtotal
 
     \g@addto@macro\@invoiceitems{%
-        {\small\color{text}#1} & {\small\color{text}\formatnumber[0]{#2}} & {\small\color{text}\showcurrency[4]{#3}} & {\small\color{text}\showcurrency{\subtotal}} \\ 
+        {\small\color{text}#1} & {\small\color{text}\formatnumber[0]{#2}} & {\small\color{text}\showcurrency[4]{#3}} & {\small\color{text}\thesubtotal{#2}{#3}} \\
         \hline
     }
 }

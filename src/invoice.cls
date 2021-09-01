@@ -221,6 +221,17 @@
     \numprint{\cost}%
 }
 
+% Calculates the subtotal of given quantity and its unit price
+% and formats the input with two digits after the decimal place
+% and currency symbol
+%
+% usage: \subtotal[decimal]{<qty>}{<unit price>}
+\newcommand*{\thesubtotal}[3][2]{%
+	\FPeval{\cost}{#3 * #2}%
+	\FPround{\cost}{\cost}{#1}%
+	\@currencybeforesymbol\numprint{\cost}\@currencyaftersymbol%
+}
+
 % Formats inputed number with 2 digits after the decimal place
 % and currency symbol
 %
